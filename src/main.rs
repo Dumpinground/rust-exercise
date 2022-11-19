@@ -14,6 +14,8 @@ fn main() {
     };
 
     user1.email = String::from("anotheremail@example.com");
+
+    print!("{}", user1.email)
 }
 
 struct User {
