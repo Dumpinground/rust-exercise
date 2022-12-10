@@ -6,18 +6,27 @@ use std::io::{stdout, BufWriter};
 
 fn main() {
 
-    let mut user1 = User {
+    let mut user1 = build_user(String::from("someone@example.com"), String::from("someusername123"));
+    let user2 = User {
+        active: user1.active,
+        username: user1.username,
+        email: String::from("another@example.com"),
+        sign_in_count: user1.sign_in_count
+    };
+
+    print!("{:#?}\n", user2)
+}
+
+fn build_user(email: String, username: String) -> User {
+    User {
         email: String::from("someone@example.com"),
         username: String::from("someusername123"),
         active: true,
         sign_in_count: 1
-    };
-
-    user1.email = String::from("anotheremail@example.com");
-
-    print!("{}", user1.email)
+    }
 }
 
+#[derive(Debug)]
 struct User {
     active: bool,
     username: String,
