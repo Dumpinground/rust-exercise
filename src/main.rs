@@ -6,15 +6,24 @@ use std::io::{stdout, BufWriter};
 
 fn main() {
 
-    let mut user1 = build_user(String::from("someone@example.com"), String::from("someusername123"));
-    let user2 = User {
-        active: user1.active,
-        username: user1.username,
-        email: String::from("another@example.com"),
-        sign_in_count: user1.sign_in_count
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
     };
 
-    print!("{:#?}\n", user2)
+    print!("{}\n", rect1.area());
+}
+
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32
+}
+
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
 }
 
 fn build_user(email: String, username: String) -> User {
