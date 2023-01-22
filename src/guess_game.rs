@@ -3,7 +3,6 @@ use std::cmp::Ordering;
 use std::io;
 
 fn guess() {
-
     println!("Guess the number!");
 
     let secret_number = rand::thread_rng().gen_range(1..101);
@@ -24,7 +23,7 @@ fn guess() {
             Err(_) => {
                 println!("invalid number");
                 continue;
-            },
+            }
         };
 
         println!("You guessed: {}", guess);
@@ -35,7 +34,7 @@ fn guess() {
             Ordering::Equal => {
                 println!("You win!");
                 break;
-            },
+            }
         }
     }
 }
