@@ -7,15 +7,28 @@
         {
             "type": "lldb",
             "request": "launch",
+            "name": "Cargo test",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib"
+                ]
+            },
+            "args": []
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
             "name": "Debug executable 'sample'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=sample",
-                    "--package=sample"
+                    "--bin=rust_exercise",
+                    "--package=rust_exercise"
                 ],
                 "filter": {
-                    "name": "sample",
+                    "name": "rust_exercise",
                     "kind": "bin"
                 }
             },
@@ -30,11 +43,11 @@
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=sample",
-                    "--package=sample"
+                    "--bin=rust_exercise",
+                    "--package=rust_exercise"
                 ],
                 "filter": {
-                    "name": "sample",
+                    "name": "rust_exercise",
                     "kind": "bin"
                 }
             },
