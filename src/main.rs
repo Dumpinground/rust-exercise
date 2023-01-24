@@ -2,8 +2,7 @@ mod guess_game;
 
 use crate::leetcode_solution::Solution;
 use ferris_says::say;
-use std::io;
-use std::io::{stdout, BufWriter};
+use std::io;use std::io::{stdout, BufWriter};
 
 mod leetcode_solution;
 
