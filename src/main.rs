@@ -42,90 +42,6 @@ struct User {
     sign_in_count: u64,
 }
 
-fn first_word(s: &str) -> &str {
-    let bytes = s.as_bytes();
-
-    for (i, &item) in bytes.iter().enumerate() {
-        if item == b' ' {
-            return &s[..i];
-        }
-    }
-
-    &s[..]
-}
-
-fn the_slice_type() {
-    let mut s = String::from("hello world");
-
-    println!("{}", first_word(&s));
-}
-
-fn ownership() {
-    let s1 = String::from("hello");
-    let s2 = &s1;
-
-    println!("{}, world!", s1);
-}
-
-fn nf(a: i16, b: i16, n: i16) {
-    if n != 0 {
-        print!("{} ", a);
-        nf(b, a + b, n - 1);
-    }
-}
-
-fn break_loop() {
-    let mut count = 0;
-    'counting_up: loop {
-        println!("count = {}", count);
-        let mut remaining = 10;
-
-        loop {
-            println!("remaining = {}", remaining);
-            if remaining == 9 {
-                break;
-            }
-            if count == 2 {
-                break 'counting_up;
-            }
-            remaining -= 1;
-        }
-
-        count += 1;
-    }
-
-    println!("End count = {}", count);
-}
-
-fn plus_one(x: i8) -> i8 {
-    x + 1
-}
-
-fn five() -> i8 {
-    5
-}
-
-fn array() {
-    let a = [1, 2, 3, 4, 5];
-
-    println!("Please enter an array index.");
-
-    let mut index = String::new();
-
-    io::stdin()
-        .read_line(&mut index)
-        .expect("Failed to read line");
-
-    let index: usize = index
-        .trim()
-        .parse()
-        .expect("Index entered was not a nubmer");
-
-    let element = a[index];
-
-    println!("The value of the element at index {} is {}", index, element);
-}
-
 fn say_simply(message: &str) {
     let stdout = stdout();
     let width = message.chars().count();
@@ -138,7 +54,10 @@ fn say_simply(message: &str) {
 #[cfg(test)]
 mod tests {
 
-    use crate::{Rectangle, say_simply};
+    use crate::Rectangle;
+    use crate::guess_game;
+    use crate::io;
+    use crate::say_simply;
 
     #[test]
     fn test1() {
@@ -165,7 +84,111 @@ mod tests {
     }
 
     #[test]
+    fn test_guess_game() {
+        guess_game::guess();
+    }
+
+    fn first_word(s: &str) -> &str {
+        let bytes = s.as_bytes();
+    
+        for (i, &item) in bytes.iter().enumerate() {
+            if item == b' ' {
+                return &s[..i];
+            }
+        }
+    
+        &s[..]
+    }
+    
+    #[test]
+    fn the_slice_type() {
+        let mut s = String::from("hello world");
+    
+        println!("{}", first_word(&s));
+    }
+    
+    #[test]
+    fn ownership() {
+        let s1 = String::from("hello");
+        let s2 = &s1;
+    
+        println!("{}, world!", s1);
+    }
+    
+    fn nf(a: i16, b: i16, n: i16) {
+        if n != 0 {
+            print!("{} ", a);
+            nf(b, a + b, n - 1);
+        }
+    }
+
+    #[test]
+    fn test_nf() {
+        nf(1, 1, 7);
+    }
+    
+    #[test]
+    fn break_loop() {
+        let mut count = 0;
+        'counting_up: loop {
+            println!("count = {}", count);
+            let mut remaining = 10;
+    
+            loop {
+                println!("remaining = {}", remaining);
+                if remaining == 9 {
+                    break;
+                }
+                if count == 2 {
+                    break 'counting_up;
+                }
+                remaining -= 1;
+            }
+    
+            count += 1;
+        }
+    
+        println!("End count = {}", count);
+    }
+    
+    fn plus_one(x: i8) -> i8 {
+        x + 1
+    }
+    
+    fn five() -> i8 {
+        5
+    }
+
+    #[test]
+    fn test_number() {
+        println!("{}, {}", plus_one(3), five());
+    }
+    
+    #[test]
+    fn array() {
+        let a = [1, 2, 3, 4, 5];
+    
+        println!("Please enter an array index.");
+    
+        let mut index = String::new();
+    
+        io::stdin()
+            .read_line(&mut index)
+            .expect("Failed to read line");
+    
+        let index: usize = index
+            .trim()
+            .parse()
+            .expect("Index entered was not a nubmer");
+    
+        let element = a[index];
+    
+        println!("The value of the element at index {} is {}", index, element);
+    }
+
+    #[test]
     fn test_say_simply() {
         say_simply("Hello Omega");
     }
+
 }
