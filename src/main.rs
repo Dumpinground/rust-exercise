@@ -1,32 +1,12 @@
 mod guess_game;
 
-use crate::leetcode_solution::Solution;
 use ferris_says::say;
 use std::io;use std::io::{stdout, BufWriter};
 
 mod leetcode_solution;
 
 fn main() {
-    let rect1 = Rectangle {
-        width: 30,
-        height: 50,
-    };
-
-    let rect2 = Rectangle {
-        width: 10,
-        height: 40,
-    };
-
-    let rect3 = Rectangle {
-        width: 60,
-        height: 45,
-    };
-
-    print!(
-        "Can rect1 hold rect2? {}\nCan rect2 hold rect3? {}\n",
-        rect1.can_hold(&rect2),
-        rect2.can_hold(&rect3)
-    );
+    
 }
 
 #[derive(Debug)]
@@ -153,4 +133,39 @@ fn say_simply(message: &str) {
     let mut writer = BufWriter::new(stdout.lock());
 
     say(message, width, &mut writer).unwrap();
+}
+
+#[cfg(test)]
+mod tests {
+
+    use crate::{Rectangle, say_simply};
+
+    #[test]
+    fn test1() {
+        let rect1 = Rectangle {
+            width: 30,
+            height: 50,
+        };
+    
+        let rect2 = Rectangle {
+            width: 10,
+            height: 40,
+        };
+    
+        let rect3 = Rectangle {
+            width: 60,
+            height: 45,
+        };
+    
+        print!(
+            "Can rect1 hold rect2? {}\nCan rect2 hold rect3? {}\n",
+            rect1.can_hold(&rect2),
+            rect2.can_hold(&rect3)
+        );
+    }
+
+    #[test]
+    fn test_say_simply() {
+        say_simply("Hello Omega");
+    }
 }
