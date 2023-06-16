@@ -1,4 +1,4 @@
-use std::{thread, time::Duration};
+use std::{sync::{mpsc, Mutex}, thread, time::Duration};
 
 fn main() {
     println!("Hello Concurrent Programming");
@@ -47,4 +47,74 @@ fn move_spawn() {
     // drop(v);
 
     handle.join().unwrap();
+}
+
+#[test]
+fn message_passing() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        let val = String::from("hi");
+        tx.send(val).unwrap();
+    });
+
+    let received = rx.recv().unwrap();
+    println!("Got: {}", received);
+}
+
+#[test]
+fn messages_passing() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        let vals = vec!["hi", "from", "the", "thread"];
+
+        for val in vals {
+            tx.send(String::from(val)).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    for received in rx {
+        println!("Got: {}", received);
+    }
+}
+
+#[test]
+fn cloned_messages_passing() {
+    let (tx, rx) = mpsc::channel();
+
+    let tx1 = tx.clone();
+    thread::spawn(move || {
+        let vals = vec!["hi", "from", "the", "thread"];
+
+        for val in vals {
+            tx1.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    thread::spawn(move || {
+        let vals = vec!["more", "messages", "for", "you"];
+        for val in vals {
+            tx.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    for received in rx {
+        println!("Got: {}", received);
+    }
+}
+
+#[test]
+fn mutex_context() {
+    let m = Mutex::new(5);
+
+    {
+        let mut num = m.lock().unwrap();
+        *num = 6;
+    }
+
+    println!("m = {:?}", m);
 }
