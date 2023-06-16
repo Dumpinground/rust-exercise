@@ -10,6 +10,6 @@ def main [
     | parse '{dir}\{example}.rs'
     # | get number | get 0
   )
-  cargo test $name --example ( $file | get example.0) -- --nocapture
+  cargo test $name --example ( $file | get example.0) -- --nocapture --color always
 }
 

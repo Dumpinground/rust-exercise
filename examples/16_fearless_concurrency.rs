@@ -1,4 +1,8 @@
-use std::{sync::{mpsc, Mutex}, thread, time::Duration};
+use std::{
+    sync::{mpsc, Arc, Mutex},
+    thread,
+    time::Duration,
+};
 
 fn main() {
     println!("Hello Concurrent Programming");
@@ -117,4 +121,25 @@ fn mutex_context() {
     }
 
     println!("m = {:?}", m);
+}
+
+#[test]
+fn mutex_ten_context() {
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let counter = Arc::clone(&counter);
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Result: {}", *counter.lock().unwrap());
 }
