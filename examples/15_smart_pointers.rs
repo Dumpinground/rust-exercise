@@ -1,4 +1,10 @@
-use std::{ops::Deref, rc::Rc, cell::{Cell, RefCell}};
+use std::{
+    cell::{Cell, RefCell},
+    cmp::Ordering,
+    fmt::{write, Display},
+    ops::Deref,
+    rc::Rc,
+};
 
 fn main() {
     println!("Hello Smart Pointers");
@@ -75,31 +81,83 @@ fn ref_cell() {
 struct Org {
     name: String,
     depth: usize,
-    child: Vec<Org>,
+    child: RefCell<Vec<Rc<Org>>>,
+}
+
+impl Display for Org {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}, [", self.name)?;
+        let a = self.child.borrow();
+        for c in a.iter() {
+            write!(f, " {} ", c)?;
+        }
+        write!(f, "]")?;
+        Ok(())
+    }
 }
 
 impl Org {
     fn new(name: String, depth: usize) -> Org {
-        Org { name, depth, child: Vec::new() }
+        Org {
+            name,
+            depth,
+            child: RefCell::new(Vec::new()),
+        }
     }
+}
+
+fn generate_texts(str_v: Vec<(&str, usize)>) -> Vec<(String, usize)> {
+    let mut v = Vec::new();
+    for (t, i) in str_v {
+        v.push((t.to_owned(), i));
+    }
+    v
 }
 
 #[test]
 fn vec_ref() {
     let s = "1".to_string();
-    let texts = vec![("1".to_owned(), 1), ("2".to_owned(), 2), ("3".to_owned(), 2)];
+    let texts = generate_texts(vec![
+        ("root", 0),
+        ("1", 1),
+        ("2", 2),
+        ("3", 2),
+        ("4", 1),
+        ("5", 2),
+    ]);
     let mut stack = Vec::new();
 
     for (text, indent) in texts {
-        let last = stack.last_mut();
-        match last {
-            None => {
-                stack.push(Org::new(text, indent));
+        loop {
+            let last = stack.last_mut();
+            match last {
+                None => {
+                    stack.push(Rc::new(Org::new(text, indent)));
+                }
+                Some(last) => {
+                    match last.depth.cmp(&indent) {
+                        Ordering::Less => {
+                            let org = Rc::new(Org::new(text, indent));
+                            last.child.borrow_mut().push(org.clone());
+                            stack.push(org.clone());
+                        }
+                        Ordering::Equal => {
+                            let org = Rc::new(Org::new(text, indent));
+                            stack.pop();
+                            let last = stack.last_mut().unwrap();
+                            last.child.borrow_mut().push(org.clone());
+                            stack.push(org.clone());
+                        }
+                        Ordering::Greater => {
+                            stack.pop();
+                            continue;
+                        }
+                    }
+                    // last.child.push(Org::new(text, indent));
+                }
             }
-            Some(last) => {
-                last.child.push(Org::new(text, indent))
-            }
+            break;
         }
-        println!("len: {}, {:?}", stack.len(), stack.last());
+        println!("len: {}, {}", stack.len(), stack.first().unwrap());
     }
 }
