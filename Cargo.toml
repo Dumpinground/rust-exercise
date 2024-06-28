@@ -8,4 +8,6 @@ edition = "2021"
 [dependencies]
 encoding_rs = "0.8"
 ferris-says = "*"
-rand = '*'
+rand = "*"
+chrono = "0.4"
+clap = { version = "4.5", features = ["cargo"] }
